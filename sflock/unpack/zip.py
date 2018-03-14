@@ -10,7 +10,7 @@ from sflock.exception import UnpackException
 
 class ZipFile(Unpacker):
     name = "zipfile"
-    exts = ".zip"
+    exts = b".zip"
     magic = "Zip archive data"
 
     def supported(self):
@@ -27,12 +27,11 @@ class ZipFile(Unpacker):
         try:
             archive.setpassword(password)
             return File(
-                relapath=entry.filename,
+                relapath=entry.filename.encode("latin-1"),
                 contents=archive.read(entry),
                 password=password
             )
-        except (RuntimeError, zipfile.BadZipfile, OverflowError,
-                zlib.error) as e:
+        except (zipfile.BadZipfile, OverflowError, zlib.error) as e:
             msg = e.message or e.args[0]
             if "Bad password" in msg:
                 return
@@ -48,6 +47,8 @@ class ZipFile(Unpacker):
                 return
 
             raise UnpackException("Unknown zipfile error: %s" % e)
+        except RuntimeError:
+            raise
 
     def unpack(self, password=None, duplicates=None):
         try:

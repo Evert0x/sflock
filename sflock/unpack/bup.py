@@ -1,16 +1,20 @@
-# Copyright (C) 2016-2017 Jurriaan Bremer.
+# Copyright (C) 2016-2018 Jurriaan Bremer.
 # This file is part of SFlock - http://www.sflock.org/.
 # See the file 'docs/LICENSE.txt' for copying permission.
 
-import ConfigParser
 import io
 import ntpath
+
+try:
+    import configparser
+except ImportError:
+    import ConfigParser as configparser
 
 from sflock.abstracts import Unpacker, File
 
 class BupFile(Unpacker):
     name = "bupfile"
-    exts = ".bup"
+    exts = b".bup"
 
     def supported(self):
         return True
@@ -24,7 +28,7 @@ class BupFile(Unpacker):
         return False
 
     def decrypt(self, content):
-        return "".join(chr(ord(ch) ^ 0x6a) for ch in content)
+        return b"".join(b"%c" % (ch ^ 0x6a) for ch in content)
 
     def unpack(self, password=None, duplicates=None):
         entries = []
@@ -37,10 +41,12 @@ class BupFile(Unpacker):
         if ["Details"] not in self.f.ole.listdir():
             return []
 
-        details = self.decrypt(self.f.ole.openstream("Details").read())
+        details = self.decrypt(
+            bytearray(self.f.ole.openstream("Details").read())
+        )
 
-        config = ConfigParser.ConfigParser()
-        config.readfp(io.BytesIO(details))
+        config = configparser.ConfigParser()
+        config.read_file(io.BytesIO(details), "config.ini")
 
         ole = self.f.ole
 
@@ -51,7 +57,7 @@ class BupFile(Unpacker):
             entries.append(File(
                 relapath=ntpath.basename(
                     config.get(filename[0], "OriginalName")
-                ),
+                ).encode("latin-1"),
                 contents=self.decrypt(ole.openstream(filename[0]).read())
             ))
 

@@ -141,7 +141,7 @@ class Office(Decoder):
         password = info.getElementsByTagName("p:encryptedKey")[0]
 
         self.ei = ei = EncryptedInfo()
-        ei.key_data_salt = key_data.getAttribute("saltValue").decode("base64")
+        ei.key_data_salt = bytes(key_data.getAttribute("saltValue"), "latin-1").decode("base64")
         ei.key_data_hash_alg = key_data.getAttribute("hashAlgorithm")
         ei.verifier_hash_input = password.getAttribute(
             "encryptedVerifierHashInput"
