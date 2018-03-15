@@ -37,10 +37,10 @@ def test_astree1():
     assert f.astree(finger=False) == {
         "duplicate": False,
         "password": None,
-        "filename": "zip_nested2.zip",
+        "filename": b"zip_nested2.zip",
         "relapath": None,
         "relaname": None,
-        "filepath": "tests/files/zip_nested2.zip",
+        "filepath": b"tests/files/zip_nested2.zip",
         "extrpath": [],
         "size": 496,
         "package": None,
@@ -57,12 +57,12 @@ def test_astree1():
                 "filename": "foo",
                 "preview": True,
                 "children": [{
-                    "filename": "bar.txt",
+                    "filename": b"bar.txt",
                     "relapath": b"deepfoo/foo/bar.txt",
-                    "relaname": "deepfoo/foo/bar.txt",
+                    "relaname": b"deepfoo/foo/bar.txt",
                     "filepath": None,
                     "extrpath": [
-                        "deepfoo/foo/bar.txt",
+                        b"deepfoo/foo/bar.txt",
                     ],
                     "duplicate": False,
                     "password": None,
@@ -104,7 +104,7 @@ def test_astree2():
             "relaname": b"tar_nested2.tar",
             "filepath": None,
             "extrpath": [
-                "tar_nested2.tar",
+                b"tar_nested2.tar",
             ],
             "package": None,
             "platform": None,
@@ -129,13 +129,13 @@ def test_astree2():
                         "platform": None,
                         "selected": False,
                         "preview": True,
-                        "filename": "bar.txt",
+                        "filename": b"bar.txt",
                         "relapath": b"deepfoo/foo/bar.txt",
-                        "relaname": "deepfoo/foo/bar.txt",
+                        "relaname": b"deepfoo/foo/bar.txt",
                         "filepath": None,
                         "extrpath": [
-                            "tar_nested2.tar",
-                            "deepfoo/foo/bar.txt",
+                            b"tar_nested2.tar",
+                            b"deepfoo/foo/bar.txt",
                         ],
                     }],
                 }],
@@ -163,10 +163,10 @@ def test_astree3():
             "duplicate": False,
             "filename": b"multipart.eml",
             "relapath": b"multipart.eml",
-            "relaname": "multipart.eml",
+            "relaname": b"multipart.eml",
             "filepath": None,
             "extrpath": [
-                "multipart.eml",
+               b"multipart.eml",
             ],
             "package": None,
             "platform": None,
@@ -200,8 +200,8 @@ def test_astree3():
                 "relaname": b"cuckoo.png",
                 "filepath": None,
                 "extrpath": [
-                    "multipart.eml",
-                    "cuckoo.png",
+                    b"multipart.eml",
+                    b"cuckoo.png",
                 ],
                 "package": None,
                 "platform": None,
@@ -235,10 +235,10 @@ def test_astree3():
 def test_astree4():
     f = unpack(b"tests/files/msg_invoice.msg")
     assert f.astree(finger=False) == {
-        "filename": "msg_invoice.msg",
+        "filename": b"msg_invoice.msg",
         "relapath": None,
         "relaname": None,
-        "filepath": "tests/files/msg_invoice.msg",
+        "filepath": b"tests/files/msg_invoice.msg",
         "extrpath": [],
         "size": 270848,
         "duplicate": False,
@@ -250,12 +250,12 @@ def test_astree4():
         "type": "container",
         "children": [{
             "duplicate": False,
-            "filename": "image003.emz",
-            "relapath": "image003.emz",
-            "relaname": "image003.emz",
+            "filename": b"image003.emz",
+            "relapath": b"image003.emz",
+            "relaname": b"image003.emz",
             "filepath": None,
             "extrpath": [
-                "image003.emz",
+                b"image003.emz",
             ],
             "package": None,
             "platform": None,
@@ -267,12 +267,12 @@ def test_astree4():
             "children": [],
         }, {
             "duplicate": False,
-            "filename": "image004.png",
-            "relapath": "image004.png",
-            "relaname": "image004.png",
+            "filename": b"image004.png",
+            "relapath": b"image004.png",
+            "relaname": b"image004.png",
             "filepath": None,
             "extrpath": [
-                "image004.png",
+                b"image004.png",
             ],
             "package": None,
             "platform": None,
@@ -284,12 +284,12 @@ def test_astree4():
             "children": [],
         }, {
             "duplicate": False,
-            "filename": "oledata.mso",
-            "relapath": "oledata.mso",
-            "relaname": "oledata.mso",
+            "filename": b"oledata.mso",
+            "relapath": b"oledata.mso",
+            "relaname": b"oledata.mso",
             "filepath": None,
             "extrpath": [
-                "oledata.mso",
+                b"oledata.mso",
             ],
             "package": "doc",
             "platform": "windows",
@@ -305,8 +305,8 @@ def test_astree4():
                 "relaname": "Firefox Setup Stub 43.0.1.exe",
                 "filepath": None,
                 "extrpath": [
-                    "oledata.mso",
-                    "Firefox Setup Stub 43.0.1.exe",
+                    b"oledata.mso",
+                    b"Firefox Setup Stub 43.0.1.exe",
                 ],
                 "package": "exe",
                 "platform": "windows",
@@ -350,7 +350,7 @@ def test_extract3():
     dirpath = tempfile.mkdtemp()
     f = unpack(b"tests/files/bup_test.bup").children[0]
 
-    f.extract(dirpath, "404.exe")
+    f.extract(dirpath, b"404.exe")
     assert not os.path.exists(
         os.path.join(dirpath, b"404.exe")
     )
@@ -358,7 +358,7 @@ def test_extract3():
         os.path.join(dirpath, b"efax_9057733019_pdf.scr")
     )
 
-    f.extract(dirpath, "efax_9057733019_pdf.scr")
+    f.extract(dirpath, b"efax_9057733019_pdf.scr")
     filepath = os.path.join(dirpath, b"efax_9057733019_pdf.scr")
     assert len(open(filepath, "rb").read()) == 377856
 
@@ -402,21 +402,21 @@ def test_duplicate():
 
 def test_read1():
     f = unpack(b"tests/files/bup_test.bup")
-    assert len(f.read("efax_9057733019_pdf.zip")) == 212663
+    assert len(f.read(b"efax_9057733019_pdf.zip")) == 212663
     assert len(f.read([
-        "efax_9057733019_pdf.zip", "efax_9057733019_pdf.scr",
+        b"efax_9057733019_pdf.zip", b"efax_9057733019_pdf.scr",
     ])) == 377856
 
 def test_read2():
     f = unpack(b"tests/files/msg_invoice.msg")
-    assert len(f.read("oledata.mso")) == 234898
+    assert len(f.read(b"oledata.mso")) == 234898
     assert len(f.read([
-        "oledata.mso", "Firefox Setup Stub 43.0.1.exe",
+        b"oledata.mso", b"Firefox Setup Stub 43.0.1.exe",
     ])) == 249336
 
 def test_read_stream():
     f = unpack(b"tests/files/bup_test.bup")
-    s = f.read("efax_9057733019_pdf.zip", stream=True)
+    s = f.read(b"efax_9057733019_pdf.zip", stream=True)
     assert len(s.read()) == 212663
 
 def test_duplicate1():
@@ -429,7 +429,7 @@ def test_duplicate1():
     ).duplicate is True
 
 def test_duplicate2():
-    if ".7z" not in supported():
+    if b".7z" not in supported():
         return
 
     duplicates = []

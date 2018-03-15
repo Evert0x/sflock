@@ -56,8 +56,10 @@ class MsgFile(Unpacker):
         for dirname in self.f.ole.listdir():
             if dirname[0].startswith("__attach") and dirname[0] not in seen:
                 filename, contents = self.get_attachment(dirname[0])
+                #if type(filename) == type(str):
+                filename = str.encode(filename)
                 entries.append(File(
-                    relapath=filename.encode("latin-1"), contents=contents
+                    relapath=filename, contents=contents
                 ))
                 seen.append(dirname[0])
 

@@ -35,8 +35,7 @@ class EmlFile(Unpacker):
 
     def real_unpack(self, password, duplicates):
         entries = []
-
-        e = email.message_from_string(self.f.contents)
+        e = email.message_from_string(self.f.contents.decode('latin-1'))
         for part in e.walk():
             if part.is_multipart():
                 continue
@@ -51,12 +50,14 @@ class EmlFile(Unpacker):
 
             filename = part.get_filename()
             if filename:
-                filename = unicode(email.header.make_header(
+                filename = (email.header.make_header(
                     email.header.decode_header(filename)
-                ))
+                )).encode()
+                # Double encode??? 1 time not working
+                filename = filename.encode()
 
             entries.append(File(
-                relapath=filename or "att1", contents=payload
+                relapath=filename or b"att1", contents=payload
             ))
 
         return entries

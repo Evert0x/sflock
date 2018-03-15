@@ -23,7 +23,7 @@ def test_pdf_embedded():
 
     assert len(files) == 1
     assert not files[0].filepath
-    assert files[0].filename == "Q6TCWXPS.docm"
+    assert files[0].filename == b"Q6TCWXPS.docm"
     assert files[0].filesize == 55494
     assert files[0].package == "doc"
     assert not files[0].selected
@@ -36,7 +36,7 @@ def test_pdf_magic():
 def test_pdf_is_embedded():
     buf = io.BytesIO()
     z = zipfile.ZipFile(buf, "w")
-    z.write("tests/files/pdf_docm.pdf")
+    z.write(b"tests/files/pdf_docm.pdf")
     z.close()
     m = ZipFile(File(contents=buf.getvalue()))
     files = list(m.unpack())

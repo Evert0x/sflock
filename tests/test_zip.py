@@ -114,23 +114,23 @@ class TestZipfile(object):
         assert not files[0].selected
 
     def test_heuristics(self):
-        t = unpack("tests/files/zip_plain.zip", filename="foo")
+        t = unpack(b"tests/files/zip_plain.zip", filename="foo")
         assert t.unpacker == "zipfile"
         assert t.filename == "foo"
 
-        t = unpack("tests/files/zip_nested.zip", filename="foo")
+        t = unpack(b"tests/files/zip_nested.zip", filename="foo")
         assert t.unpacker == "zipfile"
         assert t.filename == "foo"
 
-        t = unpack("tests/files/zip_nested2.zip", filename="foo")
+        t = unpack(b"tests/files/zip_nested2.zip", filename="foo")
         assert t.unpacker == "zipfile"
         assert t.filename == "foo"
 
-        t = unpack("tests/files/zip_encrypted.zip", filename="foo")
+        t = unpack(b"tests/files/zip_encrypted.zip", filename="foo")
         assert t.unpacker == "zipfile"
         assert t.filename == "foo"
 
-        t = unpack("tests/files/zip_encrypted2.zip", filename="foo")
+        t = unpack(b"tests/files/zip_encrypted2.zip", filename="foo")
         assert t.unpacker == "zipfile"
         assert t.filename == "foo"
 
