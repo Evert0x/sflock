@@ -181,7 +181,7 @@ class File(object):
         # Extract the filename from any of the available path components.
         self.filename = ntpath.basename(
             filename or self.relapath or self.filepath or b""
-        ).rstrip(b"\x00") or None
+        ).rstrip(b"\x00".decode()) or None
 
         self._contents = contents
         self._package = None
