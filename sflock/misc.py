@@ -48,13 +48,14 @@ class ZipCrypt(zipfile._ZipDecrypter):
         """Decrypt one character."""
         ch = self.__call__(ch)
         zipfile._ZipDecrypter._UpdateKeys(self, ch)
-        return ch
+        return chr(ch)
 
     def encrypt(self, ch):
         """Encrypt one character."""
-        t = chr(ord(self.__call__(ch)) ^ ord(ch))
+        t = chr(self.__call__(ch) ^ ch)
         zipfile._ZipDecrypter._UpdateKeys(self, ch)
-        return chr(ord(ch) ^ ord(t))
+        return ch ^ ord(t)
+        #return chr(ch ^ ord(t))
 
 class ZipInfoWithPassword(zipfile.ZipInfo):
     """Layer on top of zipfile's ZipFile to emit password protected files."""
@@ -72,12 +73,25 @@ class ZipInfoWithPassword(zipfile.ZipInfo):
         assert (zi.flag_bits & 8) == 0
 
         # Initialize ZipInfo header for password encrypted files.
-        self.pw_header = "A"*11 + chr(zi.CRC >> 24)
+        x = (zi.CRC >> 24) & 0xff
+        #raise Exception(chr(x))
+        self.pw_header = "A"*11 + chr((zi.CRC >> 24) & 0xff)
+       # raise Exception(self.pw_header)
         self.flag_bits |= self.ZIP_FLAG_PASSWORD
 
+
+        #raise Exception(h)
         # Encrypted contents that may be written away as-is.
         c = ZipCrypt(password)
-        self.contents = "".join(c.encrypt(ch) for ch in self.pw_header + buf)
+        astr = ""
+        for ch in self.pw_header + buf.decode():
+            x = c.encrypt(ord(ch))
+            #raise Exception(chr(x))
+            astr += chr(x)
+            #raise Exception(chr(x))
+
+        self.contents = str.encode(astr)
+        #self.contents = b"".join(c.encrypt(ord(ch)))
 
     @property
     def CRC(self):
